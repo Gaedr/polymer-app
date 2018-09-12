@@ -1,0 +1,105 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="programmer-card">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+      .card:hover {
+        background-color: var(--paper-grey-50);
+        box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+      }
+      small.tag {
+        padding: .5em;
+        color: whitesmoke;
+        background-color: darkgray;
+        border-radius: 5px;
+      }
+      .delete {
+        float: right;
+        text-decoration: none;
+        font-weight: bold;
+        color: var(--secondary-text-color);
+      }
+      .delete:hover {
+        font-weight: bolder;
+        color: var(--primary-text-color);
+      }
+      .circle {
+        float: left;
+        margin-right: 1em;
+      }
+      .userData {
+        float: left;
+      }
+      .username {
+        font-weight: bold;
+      }
+      .url {
+        font-style: italic;
+        color: var(#eee)
+      }
+    </style>
+
+    <div class="card">
+      <div class="circle">[[firstLetter]]</div>      
+      <paper-icon-button class="delete" icon="icons:delete"></paper-icon-button>
+      
+      <div class="userData">
+        <div class="username">[[programmer.username]]</div>
+        <div class="url">[[programmer.url]] <span>Ir</span></div>
+      </div>
+      <br style="clear: both"><hr>
+      <template is="dom-repeat" items="[[programmer.languages]]" as="tag">
+        <small class="tag">[[tag]]</small>
+      </template>
+    </div>
+
+  </template>
+
+  <script>
+    /**
+     * `programmer-card` Individual card for every programmer in list
+     *
+     * @summary Programmer card for list.
+     * @customElement
+     * @polymer
+     * @extends {Polymer.Element}
+     */
+    class ProgrammerCard extends Polymer.Element {
+      static get is() { return 'programmer-card'; }
+      static get properties() {
+        return {
+          programmer: {
+            type: Object,
+            value: () => {}
+          },
+          firstLetter: {
+            type: String,
+            computed: '_getFirstLetter(programmer.*)'
+          }
+        };
+      }
+
+      _getFirstLetter() {
+        return this.programmer.username.charAt(0).toUpperCase();
+      }
+
+      _remove(evt) {
+        evt.preventDefault();
+        this.dispatchEvent(new CustomEvent(
+          'remove-contact', { 
+            detail: this.programmer
+          })
+        );
+      }
+
+    }
+
+    window.customElements.define(ProgrammerCard.is, ProgrammerCard);
+  </script>
+</dom-module>
