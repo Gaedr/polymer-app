@@ -21,7 +21,7 @@
       query="{{query}}" 
       hide-filter-button></paper-search-bar>
     <template is="dom-repeat" items="{{filteredContacts}}" as="programmer">
-      <programmer-card programmer="{{programmer}}"></programmer-card>
+      <programmer-card programmer="{{programmer}}" on-remove="_remove"></programmer-card>
     </template>
     
     <template is="dom-if" if="{{hasContacts}}">
@@ -50,10 +50,6 @@
         return {
           contacts: {
             type: Array,
-            // value: () => [
-              // {username: 'prueba', languages: ['Python', 'C++'], url: 'https:github.com'},
-              // {username: 'gaedr', languages: ['JavaScript', 'Python', 'C++'], url: 'https:github.com'}
-            // ]
           },
           query: String,
           filteredContacts: {
@@ -81,6 +77,15 @@
 
       _hasContacts() {
         return this.contacts.length > 0 
+      }
+
+      _remove(evt) {
+        evt.preventDefault();
+        this.dispatchEvent(new CustomEvent(
+          'remove-programmer', { 
+            detail: evt.detail
+          })
+        );
       }
 
     }

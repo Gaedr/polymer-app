@@ -47,7 +47,7 @@
 
     <div class="card">
       <div class="circle">[[firstLetter]]</div>      
-      <paper-icon-button class="delete" icon="delete"></paper-icon-button>
+      <paper-icon-button class="delete" icon="delete" on-click="_remove"></paper-icon-button>
       
       <div class="userData">
         <div class="username">[[programmer.username]]</div>
@@ -92,7 +92,7 @@
       _remove(evt) {
         evt.preventDefault();
         this.dispatchEvent(new CustomEvent(
-          'remove-contact', { 
+          'remove', { 
             detail: this.programmer
           })
         );

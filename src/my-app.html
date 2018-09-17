@@ -105,8 +105,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             attr-for-selected="name"
             fallback-selection="view404"
             role="main">
-          <programmer-list name="main" contacts="[[contacts]]"></programmer-list>
-          <programmer-form name="form" on-add-user="_addUser"></programmer-form>
+          <programmer-list name="main" contacts="[[contacts]]" on-remove-programmer="_removeUser"></programmer-list>
+          <programmer-form name="form" on-add-programmer="_addUser"></programmer-form>
           <my-view404 name="view404"></my-view404>
         </iron-pages>
       </app-header-layout>
@@ -196,6 +196,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _addUser(evt) {
         this.dispatch('addUser', evt.detail);
+      }
+
+      _removeUser(evt) {
+        this.dispatch('remove', evt.detail);
       }
     }
 
