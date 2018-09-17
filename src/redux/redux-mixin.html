@@ -1,0 +1,37 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer-redux/polymer-redux.html">
+<script src="../../node_modules/redux/dist/redux.js"></script>
+
+<script>
+  const initialState = {
+    users: [
+      // {username: 'prueba', languages: ['Python', 'C++'], url: 'https:github.com'},
+      // {username: 'gaedr', languages: ['JavaScript', 'Python', 'C++'], url: 'https:github.com'}
+    ],
+  };
+  const reducer = (state, action) => {
+    if(!state) return initialState;
+    const users = state.users.slice(0);
+    switch (action.type) {
+      case 'ADD_USER':
+        users.push({ ...action.user });
+        break;
+      case 'REMOVE_USER':
+        users.splice(users.indexOf(action.user), 1);
+        break;
+      case 'ADD_USERS':
+        action.users.forEach(user => users.push(user));
+        break;
+      case 'SET_USERS':
+        users.splice(0, users.length);
+        action.users.forEach(user => users.push(user));
+        break;      
+      case 'RESET':
+        users.splice(0, users.length);
+        break;    
+    }
+    return {...state, users: users};
+  }
+  const store = Redux.createStore(reducer);
+  const ReduxMixin = PolymerRedux(store);
+</script>

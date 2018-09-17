@@ -21,6 +21,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="my-icons.html">
+<link rel="import" href="redux/redux-mixin.html">
 
 <link rel="lazy-import" href="programmer-list.html">
 <link rel="lazy-import" href="programmer-form.html">
@@ -117,7 +118,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     // preventable, allowing for better scrolling performance.
     Polymer.setPassiveTouchGestures(true);
 
-    class MyApp extends Polymer.Element {
+    class MyApp extends ReduxMixin(Polymer.Element) {
       static get is() { return 'my-app'; }
 
       static get properties() {
@@ -134,9 +135,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           rootPath: String,
           contacts: {
             type: Array,
-            value: () => []
+            statePath: 'users'
           }
         };
+      }
+
+      static get actions() {
+        return {
+          remove: user => {
+            return { type: 'REMOVE_USER', user: user }
+          },
+          addUser: user => { 
+            return { type: 'ADD_USER', user: user }
+          },
+          setUsers: users => { 
+            return { type: 'SET_USERS', users: users }
+          },
+          reset: user => { 
+            return { type: 'RESET' }
+          },
+        }
       }
 
       static get observers() {
@@ -177,7 +195,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _addUser(evt) {
-        this.push('contacts', {...evt.detail});
+        this.dispatch('addUser', evt.detail);
       }
     }
 
