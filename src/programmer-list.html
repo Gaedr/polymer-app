@@ -20,12 +20,17 @@
       placeholder="Filter"
       query="{{query}}" 
       hide-filter-button></paper-search-bar>
-    <template is="dom-repeat" items="{{filterContacts}}" as="programmer">
+    <template is="dom-repeat" items="{{filteredContacts}}" as="programmer">
       <programmer-card programmer="{{programmer}}"></programmer-card>
     </template>
     
-    <template is="dom-if" if="{{!hasResults}}">
-      <p id="noResultsMessage">No username matching <i>"[[query]]"</i> found</p>
+    <template is="dom-if" if="{{hasContacts}}">
+      <template is="dom-if" if="{{!hasResults}}">
+        <p id="noResultsMessage">No username matching <i>"[[query]]"</i> found</p>
+      </template>
+    </template>
+    <template is="dom-if" if="{{!hasContacts}}">
+        <p id="noResultsMessage">No contacts</p>
     </template>
     
   </template>
@@ -45,29 +50,37 @@
         return {
           contacts: {
             type: Array,
-            value: () => [
-              {username: 'prueba', languages: ['Python', 'C++'], url: 'https:github.com'},
-              {username: 'gaedr', languages: ['JavaScript', 'Python', 'C++'], url: 'https:github.com'}
-            ]
+            // value: () => [
+              // {username: 'prueba', languages: ['Python', 'C++'], url: 'https:github.com'},
+              // {username: 'gaedr', languages: ['JavaScript', 'Python', 'C++'], url: 'https:github.com'}
+            // ]
           },
           query: String,
-          filterContacts: {
+          filteredContacts: {
             type: Array,
-            computed: "_filterContacts(query)"
+            computed: "_filterContacts(contacts, query)"
           },
           hasResults: {
             type: Boolean,
-            computed: "_hasResults(query)"
+            computed: "_hasResults(contacts, query)"
+          },
+          hasContacts: {
+            type: Boolean,
+            computed: "_hasContacts(contacts)"
           }
         };
       }
 
       _filterContacts() {
-        return this.contacts.filter( contact => contact.username.includes(this.query));
+        return this.contacts.filter( contact => contact.username.includes(this.query || ''));
       }
 
       _hasResults() {
         return this._filterContacts().length > 0;
+      }
+
+      _hasContacts() {
+        return this.contacts.length > 0 
       }
 
     }

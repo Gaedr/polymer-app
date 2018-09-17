@@ -1,0 +1,93 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+
+
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="programmer-form">
+	<template>
+		<style include="shared-styles">
+			:host {
+				display: block;
+				padding: 10px;
+			}
+			paper-card {
+				width: 100%;
+			}
+		</style>
+
+		<iron-form id="form">
+			<form>
+				<paper-card heading="Programmer" elevation="1" animated-shadow="false">
+					<div class="card-content">
+						<paper-input 
+							required
+							auto-validate
+							error-message="The username is required"
+							label="Username" 
+							value="{{user.username}}">
+						</paper-input>
+						<paper-input 
+							requiered
+							auto-validate
+							error-message="The URL is required"
+							label="URL" 
+							value="{{user.url}}">
+						</paper-input>					
+					</div>
+					<div class="card-actions">
+						<paper-button raised on-click="_submit">
+							<iron-icon icon="social:person-add"></iron-icon>
+							Add
+						</paper-button>				
+					</div>
+				</paper-card>
+			</form>
+		</iron-form>
+		
+	</template>
+
+	<script>
+		/**
+		 * `programmer-form` Form for the data input of programmer
+		 *
+		 * @summary Programmer form for data.
+		 * @customElement
+		 * @polymer
+		 * @extends {Polymer.Element}
+		 */
+		class ProgrammerForm extends Polymer.Element {
+			static get is() {
+				return 'programmer-form';
+			}
+			static get properties() {
+				return {
+					user: {
+						type: Object,
+						value: () => ({})
+					}
+				};
+			}
+
+			_submit(evt) {
+				evt.preventDefault();
+				if(this.$.form.validate()) {
+					this.dispatchEvent(new CustomEvent(
+						'add-user', { 
+							detail: this.user
+						})
+					);
+					this.$.form.reset();
+				}
+			}
+		}
+
+		window.customElements.define(ProgrammerForm.is, ProgrammerForm);
+	</script>
+</dom-module>

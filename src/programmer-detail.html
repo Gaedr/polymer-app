@@ -1,0 +1,39 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<dom-module id="programmer-detail">
+  <template>
+    <style>
+      :host {
+        display: block
+      }
+    </style>
+
+    
+
+  </template>
+
+  <script>
+    /**
+     * `programmer-detail` Programmer detail view
+     *
+     * @summary Programmer detail view.
+     * @customElement
+     * @polymer
+     * @extends {Polymer.Element}
+     */
+    class ProgrammerDetail extends Polymer.Element {
+      static get is() { return 'programmer-detail'; }
+      static get properties() {
+        return {
+          programmer: {
+            type: Object,
+            value: () => {}
+          },
+        };
+      }
+
+    }
+
+    window.customElements.define(ProgrammerDetail.is, ProgrammerDetail);
+  </script>
+</dom-module>

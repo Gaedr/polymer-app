@@ -23,6 +23,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="my-icons.html">
 
 <link rel="lazy-import" href="programmer-list.html">
+<link rel="lazy-import" href="programmer-form.html">
 <link rel="lazy-import" href="my-view404.html">
 
 <dom-module id="my-app">
@@ -84,6 +85,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <a name="main" href="[[rootPath]]main">Programmers</a>
+          <a name="main" href="[[rootPath]]form">Add</a>
         </iron-selector>
       </app-drawer>
 
@@ -102,7 +104,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             attr-for-selected="name"
             fallback-selection="view404"
             role="main">
-          <programmer-list name="main"></programmer-list>
+          <programmer-list name="main" contacts="[[contacts]]"></programmer-list>
+          <programmer-form name="form" on-add-user="_addUser"></programmer-form>
           <my-view404 name="view404"></my-view404>
         </iron-pages>
       </app-header-layout>
@@ -129,6 +132,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // This shouldn't be neccessary, but the Analyzer isn't picking up
           // Polymer.Element#rootPath
           rootPath: String,
+          contacts: {
+            type: Array,
+            value: () => []
+          }
         };
       }
 
@@ -155,6 +162,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if(page === 'main' ) {
           resolvedPageUrl = this.resolveUrl('programmer-list.html');
         }
+        if(page === 'form' ) {
+          resolvedPageUrl = this.resolveUrl('programmer-form.html');
+        }
         Polymer.importHref(
             resolvedPageUrl,
             null,
@@ -164,6 +174,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _showPage404() {
         this.page = 'view404';
+      }
+
+      _addUser(evt) {
+        this.push('contacts', {...evt.detail});
       }
     }
 
