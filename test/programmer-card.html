@@ -1,0 +1,92 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>programmer-card</title>
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+
+    <!-- Import the element to test -->
+    <link rel="import" href="../src/programmer-card.html">
+  </head>
+  <body>
+    <test-fixture id="BasicView">
+      <template>
+        <programmer-card ></programmer-card>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('programmer-card tests', function() {
+        let element,
+            elementShadowRoot,
+            divCapitalCharacter,
+            divUsername,
+            divURL,
+            tags,
+            deleteButton;
+
+        const user = {
+          username: 'prueba',
+          languages: ['Python', 'C++'],
+          url: 'https://github.com/prueba'
+        };
+
+        setup( function(done) {
+          element = fixture('BasicView');
+          element.programmer = user;
+          elementShadowRoot = element.shadowRoot;     
+          divCapitalCharacter = elementShadowRoot.querySelector('.circle');
+          divUsername = elementShadowRoot.querySelector('.username');
+          divURL = elementShadowRoot.querySelector('.url');
+          deleteButton = elementShadowRoot.querySelector('.delete');
+          flush( () => {
+            tags = elementShadowRoot.querySelectorAll('.tag');
+            done();
+          })
+        });
+
+        test('should show the correct programmer info', function() {
+          expect(divCapitalCharacter.innerHTML).to.equal('P');
+          expect(divUsername.innerHTML).to.equal('prueba');
+          expect(divURL.innerHTML).to.include('https://github.com/prueba');
+        });
+
+        test('should show all user programming languages', function() {
+          expect(tags).to.have.length(2);
+          expect(tags[0].innerHTML).to.equal('Python');
+          expect(tags[1].innerHTML).to.equal('C++');
+        });
+
+        test('should fire `remove` event after press delete button', function() {
+          const spyOnDispatchEvent = sinon.spy(element.__proto__, 'dispatchEvent');
+
+          function _validExpect() {
+            expect(spyOnDispatchEvent.calledOnce).to.be.true;
+            expect(spyOnDispatchEvent.args[0][0].type).to.be.equal('remove');
+          }
+
+          deleteButton.addEventListener('click', _validExpect);
+          deleteButton.click();
+
+          deleteButton.removeEventListener('click', _validExpect);
+          spyOnDispatchEvent.restore();
+        });
+
+      });
+    </script>
+  </body>
+</html>

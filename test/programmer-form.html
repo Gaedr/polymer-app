@@ -25,7 +25,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <body>
     <test-fixture id="BasicView">
       <template>
-        <programmer-form contacts="[]"></programmer-form>
+        <programmer-form></programmer-form>
       </template>
     </test-fixture>
 
@@ -37,11 +37,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             inputUrl,
             sendButton,
             form;
-
-        const usersList = [
-          {username: 'prueba', languages: ['Python', 'C++'], url: 'https:github.com'},
-          {username: 'gaedr', languages: ['JavaScript', 'Python', 'C++'], url: 'https:github.com'}
-        ];
 
         setup( function() {
           element = fixture('BasicView');
