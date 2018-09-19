@@ -1,0 +1,90 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>programmer-list</title>
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+
+    <!-- Import the element to test -->
+    <link rel="import" href="../src/programmer-form.html">
+  </head>
+  <body>
+    <test-fixture id="BasicView">
+      <template>
+        <programmer-form contacts="[]"></programmer-form>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('programmer-form tests', function() {
+        let element,
+            elementShadowRoot,
+            inputUsername,
+            inputUrl,
+            sendButton,
+            form;
+
+        const usersList = [
+          {username: 'prueba', languages: ['Python', 'C++'], url: 'https:github.com'},
+          {username: 'gaedr', languages: ['JavaScript', 'Python', 'C++'], url: 'https:github.com'}
+        ];
+
+        setup( function() {
+          element = fixture('BasicView');
+          elementShadowRoot = element.shadowRoot;
+          inputUsername = elementShadowRoot.querySelector('#username');
+          inputUrl = elementShadowRoot.querySelector('#url');
+          sendButton = elementShadowRoot.querySelector('#sendButton');
+          form = elementShadowRoot.querySelector('#form');
+        });
+
+        test('should not fire any event if form is not valid', function() {
+          const stubIronFormValidate = sinon.stub(form, 'validate', () => false);
+          const spyOnDispatchEvent = sinon.spy(element.__proto__, 'dispatchEvent');
+
+          function _invalidExpect() {
+            expect(spyOnDispatchEvent.called).to.be.false;
+          }
+
+          sendButton.addEventListener('click', _invalidExpect);
+          sendButton.click();
+
+          sendButton.removeEventListener('click', _invalidExpect);
+          spyOnDispatchEvent.restore();
+          stubIronFormValidate.restore();
+        });
+
+        test('should fire `add-programmer` event if form is valid', function() {
+          const stubIronFormValidate = sinon.stub(form, 'validate', () => true);
+          const spyOnDispatchEvent = sinon.spy(element.__proto__, 'dispatchEvent');
+
+          function _validExpect() {
+            expect(spyOnDispatchEvent.calledOnce).to.be.true;
+            expect(spyOnDispatchEvent.args[0][0].type).to.be.equal('add-programmer');
+          }
+
+          sendButton.addEventListener('click', _validExpect);
+          sendButton.click();
+
+          sendButton.removeEventListener('click', _validExpect);
+          spyOnDispatchEvent.restore();
+          stubIronFormValidate.restore();
+        });
+      });
+    </script>
+  </body>
+</html>

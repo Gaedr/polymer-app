@@ -2,13 +2,14 @@
   "plugins": {
     "local": {
       "browsers": [
-        "chrome"
+        "chrome",
+        "firefox"
       ],
       "browserOptions": {
         "chrome": [
           "headless",
           "disable-gpu",
-          "no-sandbox"
+          "--no-sandbox"
         ]
       }
     }

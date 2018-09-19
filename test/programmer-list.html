@@ -1,0 +1,91 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>programmer-list</title>
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+
+    <!-- Import the element to test -->
+    <link rel="import" href="../src/programmer-list.html">
+  </head>
+  <body>
+    <test-fixture id="BasicView">
+      <template>
+        <programmer-list contacts="[]"></programmer-list>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('programmer-list tests', function() {
+        let element,
+            elementShadowRoot;
+
+        const usersList = [
+          {username: 'prueba', languages: ['Python', 'C++'], url: 'https:github.com'},
+          {username: 'gaedr', languages: ['JavaScript', 'Python', 'C++'], url: 'https:github.com'}
+        ];
+
+        setup( function() {
+          element = fixture('BasicView');
+          elementShadowRoot = element.shadowRoot;          
+        });
+
+        test('at init the number of contacts should be 0', function(done) {
+          expect(element.contacts).to.have.length(0);
+          expect(element.hasContacts).to.be.false;
+          flush( () => {
+            const noResultsMessage = elementShadowRoot.querySelector('#noResultsMessage');
+            expect(noResultsMessage.innerHTML).to.equal("No contacts");
+            done();
+          });
+        });
+
+        test('when added two contacts the total should be 2', function(done) {
+          element.contacts = [...usersList];
+          expect(element.contacts).to.have.length(2);
+          expect(element.hasContacts).to.be.true;
+          flush( () => {
+            const noResultsMessage = elementShadowRoot.querySelector('#noResultsMessage');
+            expect(noResultsMessage).to.be.null;
+            done();
+          });
+        });
+
+        test('writting in filter box must show filtered contacts', function() {
+          element.contacts = [...usersList];
+          const searchBar = elementShadowRoot.querySelector('paper-search-bar');
+          searchBar.set('query', 'g');
+          expect(element.filteredContacts).to.have.length(1);
+          expect(element.hasResults).to.be.true;
+        });
+
+        test('writting in filter box non existants contacts should show a message', function(done) {
+          element.contacts = [...usersList];
+          const searchBar = elementShadowRoot.querySelector('paper-search-bar');
+          searchBar.set('query', 'gg');
+          expect(element.filteredContacts).to.have.length(0);
+          expect(element.hasResults).to.be.false;
+          flush( () => {
+            const noResultsMessage = elementShadowRoot.querySelector('#noResultsMessage');
+            expect(noResultsMessage.innerHTML).to.include('No username matching');
+            done();
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

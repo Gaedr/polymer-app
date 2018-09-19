@@ -26,23 +26,24 @@
 			<form>
 				<paper-card heading="Add Programmer" elevation="1" animated-shadow="false">
 					<div class="card-content">
-						<paper-input 
+						<paper-input id="username"
 							required
 							auto-validate
 							error-message="The username is required"
 							label="Username" 
 							value="{{user.username}}">
 						</paper-input>
-						<paper-input 
+						<paper-input id="url"
 							required
 							auto-validate
 							error-message="The URL is required"
-							label="URL" 
+							label="URL"
+							type="url"
 							value="{{user.url}}">
 						</paper-input>					
 					</div>
 					<div class="card-actions">
-						<paper-button raised on-click="_submit">
+						<paper-button id="sendButton" raised on-click="_submit">
 							<iron-icon icon="social:person-add"></iron-icon>
 							Add
 						</paper-button>				
